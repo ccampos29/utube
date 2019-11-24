@@ -1,0 +1,35 @@
+body{
+    background-image: url("../images/site/background.jpg");
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
+}
+
+.profile-img-card {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.profile-name-card {
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0 0;
+    min-height: 1em;
+}
+
+.div-center{
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -40%);
+    -webkit-transform: translate(-50%, -40%);
+}
+
+.card-background{
+    background: rgb(255,255,255,0.8);
+}
