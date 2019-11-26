@@ -46,7 +46,7 @@
 
                     <form class="form-inline form-search">
                         <input class="form-control mr-sm-1 input-search" type="search" placeholder="Realizar busqueda" aria-label="Search">
-                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><i class='fas fa-search'></i>&nbsp;&nbsp;Buscar</button>
+                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><i class='fas fa-search'></i></button>
                     </form>
 
                     <!-- Right Side Of Navbar -->
