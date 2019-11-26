@@ -18,6 +18,7 @@ class CreateVideosTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('title');
             $table->string('description');
+            $table->string('image_name');
             $table->string('image_url');
             $table->string('video_url');
             $table->timestamps();

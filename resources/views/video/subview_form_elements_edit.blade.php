@@ -2,6 +2,9 @@
 
 <script>
     $(document).ready(function() {
+        $(".content-preview-edit").css("border-style", "dotted");
+        $("#image-preview").attr("src","http://utube.test/{{$video->image_url}}")
+
         $("input[name=image_url]").on("change", function(e) {
             $(".content-preview").css("border-style", "dotted");
             var fileName = $(this).val().split("\\").pop();
@@ -16,10 +19,6 @@
             };
             reader.readAsDataURL(e.target.files[0]);
         }); 
-        $("input[name=video_url]").on("change", function(e) {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".video-label").addClass("selected").html(fileName);
-        });
     });
 </script>
 
@@ -33,19 +32,13 @@
 <div class="form-group">
     {!! Form::label('image_url', 'Miniatura', ['class' => 'control-label']) !!}
     <div class="custom-file">
-        <input type="file" class="custom-file-input" name="image_url" accept="image/jpeg" required>
-        <label class="custom-file-label image-label" for="image_url">Choose file</label>
+        <input type="file" class="custom-file-input" name="image_url" accept="image/jpeg">
+        <label class="custom-file-label image-label" for="image_url">{{$video->image_name}}</label>
     </div>
-    <div class="content-preview">
-        <div id="preview"></div>
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('video_url', 'Video', ['class' => 'control-label']) !!}
-    <div class="custom-file">
-        <input type="file" class="custom-file-input" name="video_url" accept="video/mp4" required>
-        <label class="custom-file-label video-label" for="video_url">Choose file</label>
+    <div class="content-preview-edit">
+        <div id="preview">
+            <img id="image-preview" src="" />
+        </div>
     </div>
 </div>
 

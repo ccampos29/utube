@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <h2 class="title">Mis videos</h2>
@@ -26,7 +26,7 @@
 
                                     <div class="content-panel">
                                         <div class="panel-btns">
-                                            <button type="button" class="btn btn-success btn-setting">Editar</button>
+                                            <a href="{{ route('video.edit', $video) }}" type="button" class="btn btn-success btn-setting">Editar</a>
                                             <button type="button" class="btn btn-danger btn-setting" data-toggle="modal"
                                                 data-target="#delete-video-modal" data-title="{{$video->title}}"
                                                 data-id="{{$video->id}}">Eliminar</button>
@@ -34,7 +34,7 @@
                                     </div>
 
                                     <div class="content-update">
-                                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small>
+                                        <p class="card-text"><small class="text-muted">Last updated {{ $video->updated_at->diffForHumans() }}.</small>
                                         </p>
                                     </div>
                                 </div>
@@ -58,6 +58,10 @@
 </div>
 
 @endsection
+
+<a href="{{ route('video.create') }}" class="float">
+    <i class="fa fa-plus my-float"></i>
+</a>
 
 @include('video.show')
 @include('video.destroy')
