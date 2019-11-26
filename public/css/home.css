@@ -22,14 +22,6 @@ body{
     min-height: 1em;
 }
 
-.div-center{
-    position: absolute;
-    left: 50%;
-    top: 40%;
-    transform: translate(-50%, -40%);
-    -webkit-transform: translate(-50%, -40%);
-}
-
 .card-background{
     background: rgb(255,255,255,0.8);
 }
