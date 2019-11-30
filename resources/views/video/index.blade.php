@@ -12,12 +12,10 @@
                     @forelse ($videos as $video)
                     <div class="card mb-3">
                         <div class="row no-gutters">
-                            <button class="col-md-4 content-image" data-toggle="modal" data-target="#show-video-modal"
-                                data-video="{{$video->video_url}}" data-description="{{$video->description}}"
-                                data-title="{{$video->title}}">
+                            <a class="col-md-4 content-image" href="{{ route('video.show', $video) }}">
                                 <img src="{{ asset("$video->image_url") }}" class="card-img" alt="..." width="240px"
                                     height="200px">
-                            </button>
+                            </a>
                             <div class="col-md-8">
                                 <div class="card-body content-video">
                                     <div class="title-video">
@@ -63,5 +61,4 @@
     <i class="fa fa-plus my-float"></i>
 </a>
 
-@include('video.show')
 @include('video.destroy')

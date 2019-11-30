@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Builder;
 
 class VideoController extends Controller
 {
@@ -17,7 +18,15 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $videos = Video::where('user_id', Auth::id())->paginate(3);
+        $user = Auth::user();
+        $videos = $user->videos()->orderBy('updated_at', 'desc')->paginate(3);
+
+        foreach($videos as $video){
+            $video->comments = $video->comments()->orderBy('updated_at', 'desc')->get();
+            foreach($video->comments as $comment){
+                $comment->user;
+            }
+        }
         if(session("success_message")){
             Alert::toast(session("success_message"),'success');;
         }
@@ -83,7 +92,12 @@ class VideoController extends Controller
      */
     public function show(Video $video)
     {
-        //
+        $video->comments = $video->comments()->orderBy('updated_at', 'desc')->paginate(5);
+        foreach($video->comments as $comment){
+            $comment->user;
+        }
+
+        return view('video.show', compact('video'));
     }
 
     /**
@@ -106,6 +120,11 @@ class VideoController extends Controller
      */
     public function update(Request $request, Video $video)
     {
+        Validator::make($request->all(), [
+            'title'       => 'required|string|min:5|max:50',
+            'description' => 'required|string|min:3|max:250',
+        ])->validate();
+
         $input = $request->all();
         $video->fill($input);
         
@@ -137,5 +156,19 @@ class VideoController extends Controller
 
         return redirect()
             ->route('video.index')->withSuccessMessage("¡El video se ha removido!");
+    }
+
+    public function searchVideos(Request $request)
+    {
+        $title = $request->title;
+        $videos = Video::where('title', 'LIKE', "%{$title}%")->paginate(3);
+            // ->orWhere('email', 'LIKE', "%{$searchTerm}%") 
+        foreach($videos as $video){
+            $video->comments = $video->comments()->orderBy('updated_at', 'desc')->get();
+            foreach($video->comments as $comment){
+                $comment->user;
+            }
+        }
+        return view('video.searchVideos', compact('videos'));
     }
 }

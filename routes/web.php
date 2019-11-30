@@ -11,14 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'WelcomeController@index')->name('welcome');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('video', 'VideoController');
+    Route::resource('video.comment', 'CommentController');
 });
+
+Route::post('/search', 'VideoController@searchVideos')->name('search');
+
+Route::get('/video/{video}','VideoController@show')->name('video.show');

@@ -15,8 +15,8 @@
     @stack('scripts')
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    {{-- <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> --}}
     <link type="text/css" href="{{ asset('fonts/css/all.min.css') }}" rel="stylesheet">
 
     <!-- Styles -->
@@ -44,8 +44,9 @@
 
                     </ul>
 
-                    <form class="form-inline form-search">
-                        <input class="form-control mr-sm-1 input-search" type="search" placeholder="Realizar busqueda" aria-label="Search">
+                    <form class="form-inline form-search" method="POST" action="{{ route('search') }}" autocomplete="off">
+                        @csrf
+                        <input class="form-control mr-sm-1 input-search" name="title" type="search" placeholder="Realizar busqueda" aria-label="Search">
                         <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><i class='fas fa-search'></i></button>
                     </form>
 

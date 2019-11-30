@@ -92,3 +92,12 @@
 .input-search{
     width: 270px !important;
 }
+
+.name-user{
+    color:red;
+    font-weight:bold
+}
+
+.inline{
+    display: inline;
+}
