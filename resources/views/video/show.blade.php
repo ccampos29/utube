@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@include('sweetalert::alert')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -15,6 +16,12 @@
                     <hr>
                     <h4>Descripcion: </h4>
                     <hr>
+                    <p class='card-text inline'><small class='text-muted'>
+                            Publicado por {{$video->user->name}}</small>
+                    </p>
+                    <p class='card-text inline'><small class='text-muted'>
+                            el {{$video->updated_at}}</small>
+                    </p>
                     <p id="description">{{$video->description}}</p>
                     <hr>
                     <h4>Comentarios: </h4>
@@ -26,26 +33,26 @@
 
                             <div class="actionsAlign">
                                 <div class="inline">
-                                    <p class='card-text inline'><small class='text-muted'>Publicado
+                                    <p class='card-text inline'><small class='text-muted'>Publicado en
                                             {{$comment->updated_at}}</small>
                                     </p>
                                 </div>
                                 <div class="inline">
                                     @if(Auth::check())
-                                        @if(auth()->user()->id == $comment->user_id)
-                                        <a href="{{ route('video.comment.edit', [$video, $comment]) }}" class="btn btn-link"
-                                            data-toggle="tooltip" data-placement="bottom" title="Editar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
+                                    @if(auth()->user()->id == $comment->user_id || auth()->user()->hasRole('admin'))
+                                    <a href="{{ route('video.comment.edit', [$video, $comment]) }}" class="btn btn-link"
+                                        data-toggle="tooltip" data-placement="bottom" title="Editar">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
 
-                                        {!! Form::open(['method' => 'DELETE', 'route' => ['video.comment.destroy',$video,
-                                        $comment], 'class' => ['inline']]) !!}
-                                        <button class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
-                                            title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                        {!! Form::close() !!}
-                                        @endif
+                                    {!! Form::open(['method' => 'DELETE', 'route' => ['video.comment.destroy',$video,
+                                    $comment], 'class' => ['inline']]) !!}
+                                    <button class="btn btn-link" data-toggle="tooltip" data-placement="bottom"
+                                        title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {!! Form::close() !!}
+                                    @endif
                                     @endif
                                     <hr>
                                     {{ $video->comments->links() }}

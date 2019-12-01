@@ -19,4 +19,13 @@ class Comment extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function video()
+    {
+        return $this->belongsTo('App\Video');
+    }
+
+    public function isOwnedByUser($user_id){
+        return $this->user_id == $user_id;
+    }
 }

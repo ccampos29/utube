@@ -19,7 +19,12 @@ class VideoController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $videos = $user->videos()->orderBy('updated_at', 'desc')->paginate(3);
+
+        if($user->hasRole('user')){
+            $videos = $user->videos()->orderBy('updated_at', 'desc')->paginate(5);
+        }else if($user->hasRole('admin')){
+            $videos = Video::orderBy('updated_at', 'desc')->paginate(5);
+        }
 
         foreach($videos as $video){
             $video->comments = $video->comments()->orderBy('updated_at', 'desc')->get();
@@ -30,6 +35,10 @@ class VideoController extends Controller
         if(session("success_message")){
             Alert::toast(session("success_message"),'success');;
         }
+        if(session("error_message")){
+            Alert::toast(session("error_message"),'error');;
+        }
+
         return view('video.index', compact('videos'));
     }
 
@@ -92,6 +101,12 @@ class VideoController extends Controller
      */
     public function show(Video $video)
     {
+        if(session("success_message")){
+            Alert::toast(session("success_message"),'success');;
+        }
+        if(session("error_message")){
+            Alert::toast(session("error_message"),'error');;
+        }
         $video->comments = $video->comments()->orderBy('updated_at', 'desc')->paginate(5);
         foreach($video->comments as $comment){
             $comment->user;
@@ -108,7 +123,10 @@ class VideoController extends Controller
      */
     public function edit(Video $video)
     {
-        return view('video.edit', compact('video'));
+        $user = Auth::user();
+        if($user->hasRole('admin') || $video->isOwnedByUser($user->id))
+            return view('video.edit', compact('video'));
+        return redirect()->route('video.index')->withErrorMessage("¡No tienes privilegios para acceder a este elemento!");
     }
 
     /**
@@ -120,6 +138,11 @@ class VideoController extends Controller
      */
     public function update(Request $request, Video $video)
     {
+        $user = Auth::user();
+        
+        if(!$user->hasRole('admin') && !$video->isOwnedByUser($user->id))
+            return redirect()->route('video.index')->withErrorMessage("¡No tienes privilegios para acceder a este elemento!");
+
         Validator::make($request->all(), [
             'title'       => 'required|string|min:5|max:50',
             'description' => 'required|string|min:3|max:250',
@@ -152,16 +175,19 @@ class VideoController extends Controller
      */
     public function destroy(Video $video)
     {
-        $video->delete();
-
-        return redirect()
-            ->route('video.index')->withSuccessMessage("¡El video se ha removido!");
+        $user = Auth::user();
+        if($user->hasRole('admin') || $video->isOwnedByUser($user->id)){
+            $video->delete();
+            return redirect()
+                   ->route('video.index')->withSuccessMessage("¡El video se ha removido!");
+        }
+        return redirect()->route('video.index')->withErrorMessage("¡No tienes privilegios para acceder a este elemento!");        
     }
 
     public function searchVideos(Request $request)
     {
         $title = $request->title;
-        $videos = Video::where('title', 'LIKE', "%{$title}%")->paginate(3);
+        $videos = Video::where('title', 'LIKE', "%{$title}%")->paginate(5);
             // ->orWhere('email', 'LIKE', "%{$searchTerm}%") 
         foreach($videos as $video){
             $video->comments = $video->comments()->orderBy('updated_at', 'desc')->get();

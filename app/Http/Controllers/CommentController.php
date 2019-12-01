@@ -7,6 +7,7 @@ use App\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class CommentController extends Controller
 {
@@ -73,7 +74,13 @@ class CommentController extends Controller
      */
     public function edit(Video $video, Comment $comment)
     {
-        return view('comment.edit', compact('video', 'comment'));
+        $user = Auth::user();
+        if($user->hasRole('admin') || $comment->isOwnedByUser($user->id))
+            return view('comment.edit', compact('video', 'comment'));
+
+        return redirect()
+            ->route('video.show', $video)
+            ->withErrorMessage("¡No tienes privilegios para acceder a este elemento!");
     }
 
     /**
@@ -85,6 +92,13 @@ class CommentController extends Controller
      */
     public function update(Request $request, Video $video, Comment $comment)
     {
+        $user = Auth::user();
+        
+        if(!$user->hasRole('admin') && !$comment->isOwnedByUser($user->id))
+            return redirect()
+                ->route('video.show', $video)
+                ->withErrorMessage("¡No tienes privilegios para acceder a este elemento!");
+
         $comment->description = $request->description;
         $comment->save();
         
@@ -101,10 +115,16 @@ class CommentController extends Controller
      */
     public function destroy(Video $video, Comment $comment)
     {
-        $comment->delete();
+        $user = Auth::user();
+        if($user->hasRole('admin') || $comment->isOwnedByUser($user->id)){
+            $comment->delete();
 
+            return redirect()
+                ->route('video.show', $video)
+                ->withSuccessMessage("¡El comentario se ha removido!");
+        }
         return redirect()
             ->route('video.show', $video)
-                ->withSuccessMessage("¡El comentario se ha removido!");
+            ->withErrorMessage("¡No tienes privilegios para acceder a este elemento!");
     }
 }
