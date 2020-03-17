@@ -46,7 +46,7 @@
 
                     <form class="form-inline form-search" method="POST" action="{{ route('search') }}" autocomplete="off">
                         @csrf
-                        <input class="form-control mr-sm-1 input-search" name="title" type="search" placeholder="Realizar busqueda" aria-label="Search">
+                        <input class="form-control mr-sm-1 input-search" name="title" type="search" placeholder="Realizar busqueda" aria-label="Search" required>
                         <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><i class='fas fa-search'></i></button>
                     </form>
 
